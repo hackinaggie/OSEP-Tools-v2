@@ -1,53 +1,72 @@
-![Title](images/title-ad.png 'Text')
+![Title](Other/ad_cs_imgs/title-ad.png 'Text')
 
 This cheat sheet contains common enumeration and attack methods for Windows Active Directory with the use of powershell.
 
 Last update: *16 Oct 2024*
 ## Table of Contents
-- [Pre-requisites](#pre-requisites)
-- [PowerShell AMSI Bypass](#PowerShell-AMSI-Bypass)
-- [PowerShell Bypass Execution Policy](#PowerShell-Bypass-Execution-Policy)
-- [Evasion and obfuscation with PowerShellArmoury](#Evasion-and-obfuscation-with-PowerShellArmoury)
+- [PowerShell AMSI Bypass](#powershell-amsi-bypass)
+- [PowerShell Bypass Execution Policy](#powershell-bypass-execution-policy)
+- [Evasion and obfuscation with PowerShellArmoury](#evasion-and-obfuscation-with-powershellarmoury)
+    - [Create an armoury](#create-an-armoury)
 - [Windows Defender](#windows-defender)
+    - [Disable Windows Defender](#disable-windows-defender)
+    - [Disable Windows Defender and delete signatures](#disable-windows-defender-and-delete-signatures)
 - [Remote Desktop](#remote-desktop)
-  -  [Enable Remote Desktop](#Enable-Remote-Desktop)
-  -  [Login with remote desktop](#login-with-remote-desktop)
-  -  [Login with remote desktop with folder sharing](#Login-with-remote-desktop-with-folder-sharing)
+    - [Enable Remote Desktop](#enable-remote-desktop)
+    - [Login with remote desktop](#login-with-remote-desktop)
+    - [Login with remote desktop with folder sharing](#login-with-remote-desktop-with-folder-sharing)
+    - [Login with xfreerdp](#login-with-xfreerdp)
+    - [Login with xfreerdp with folder sharing](#login-with-xfreerdp-with-folder-sharing)
 - [Enumeration](#enumeration)
-  -  [Users Enumeration](#users-enumeration)
-  -  [Domain Admins Enumeration](#domain-admins-enumeration)
-  -  [Computers Enumeration](#computers-enumeration)
-  -  [Groups and Members Enumeration](#groups-and-members-enumeration)
-  -  [Shares Enumeration](#shares-enumeration) 
-  -  [OUI and GPO Enumeration](#oui-and-gpo-enumeration) 
-  -  [ACLs Enumeration](#acls-enumeration)
-  -  [Domain Trust Mapping](#domain-trust-mapping)
-  -  [Domain Forest Enumeration](#domain-forest-enumeration)
-  -  [User Hunting](#user-hunting)
-  -  [Enumeration with BloodHound](#enumeration-with-bloodhound)
-     -  [Gui-graph Queries](#gui-graph-queries)
-     -  [Console Queries](#console-queries)
+    - [Users Enumeration](#users-enumeration)
+    - [Domain Admins Enumeration](#domain-admins-enumeration)
+    - [Computers Enumeration](#computers-enumeration)
+    - [Groups and Members Enumeration](#groups-and-members-enumeration)
+    - [Shares Enumeration](#shares-enumeration)
+    - [OUI and GPO Enumeration](#oui-and-gpo-enumeration)
+    - [ACLs Enumeration](#acls-enumeration)
+    - [Domain Trust Mapping](#domain-trust-mapping)
+    - [Domain Forest Enumeration](#domain-forest-enumeration)
+    - [User Hunting](#user-hunting)
+    - [Enumeration with BloodHound](#enumeration-with-bloodhound)
+      - [Pre-requisites](#pre-requisites-1)
+      - [Neo4j:](#neo4j)
+      - [SharpHound:](#sharphound)
+      - [BloodHound:](#bloodhound)
+      - [BloodHound-python:](#bloodhound-python)
+    - [Gui-Graph Queries](#gui-graph-queries)
+    - [Console Queries](#console-queries)
 - [Local Privilege Escalation](#local-privilege-escalation)
+    - [Using PowerUp:](#using-powerup)
+    - [BeRoot](#beroot)
+    - [PrivEsc](#privesc)
 - [Lateral Movement](#lateral-movement)
 - [Persistence](#persistence)
-  -  [Golden Ticket](#golden-ticket)
-  -  [Silver Ticket](#silver-ticket)
-  -  [Skeleton Key](#skeleton-key)
-  -  [DCSync](#dcsync)
+    - [Golden Ticket](#golden-ticket)
+    - [Silver Ticket](#silver-ticket)
+    - [Skeleton Key](#skeleton-key)
+    - [DCSync](#dcsync)
 - [Privilege Escalation](#privilege-escalation)
-  -  [Kerberoast](#kerberoast)
-  -  [Targeted Kerberoasting AS REPs](#targeted-Kerberoasting-AS-REPs)
-  -  [Targeted Kerberoasting Set SPN](#targeted-Kerberoasting-set-spn)
-  -  [Kerberos Delegation](#kerberoast-delegation)
-     -  [Unconstrained Delegation](#unconstrained-delegation)
-        -  [Printer Bug](#printer-bug)
-     -  [Constrained Delegation](#constrained-delegation)
-  -  [Child to Parent using Trust Tickets](#Child-to-Parent-using-Trust-Tickets)
-  -  [Child to Parent using Krbtgt Hash](#Child-to-Parent-using-krbtgt-hash)
-  -  [Across Forest using Trust Tickets](#Across-forest-using-trust-tickets)
-  -  [GenericAll Abused](#GenericAll-Abused)
+    - [Kerberoast](#kerberoast)
+    - [Targeted Kerberoasting AS REPs](#targeted-kerberoasting-as-reps)
+    - [Targeted Kerberoasting Set SPN](#targeted-kerberoasting-set-spn)
+    - [Kerberos Delegation](#kerberos-delegation)
+    - [Unconstrained Delegation](#unconstrained-delegation)
+    - [Printer Bug](#printer-bug)
+      - [Pre-requisites](#pre-requisites-2)
+      - [Rubeus:](#rubeus)
+      - [Ms-rprn:](#ms-rprn)
+    - [Constrained Delegation](#constrained-delegation)
+      - [Pre-requisites](#pre-requisites-3)
+      - [Kekeo:](#kekeo)
+    - [Child to Parent using Trust Tickets](#child-to-parent-using-trust-tickets)
+    - [Child to Parent using Krbtgt Hash](#child-to-parent-using-krbtgt-hash)
+    - [Across Forest using Trust Tickets](#across-forest-using-trust-tickets)
+    - [GenericAll Abused](#genericall-abused)
 - [Trust Abuse MSSQL Servers](#trust-abuse-mssql-servers)
-- [Forest Persistence DCShadow](#Forest-Persistence-DCShadow)
+      - [Pre-requisites](#pre-requisites-4)
+      - [PowerUpSQL:](#powerupsql)
+- [Forest Persistence DCShadow](#forest-persistence-dcshadow)
 
 ## Tools and Scripts
 - [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1)
@@ -103,7 +122,7 @@ function Disable-ExecutionPolicy {($ctx = $executioncontext.gettype().getfield("
 
 **Example:**
 
-![Main Logo](images/Example_execution-policy.PNG 'ExampleExecutionPolicy')
+![Main Logo](Other/ad_cs_imgs/Example_execution-policy.PNG 'ExampleExecutionPolicy')
 
 # Evasion and obfuscation with PowerShellArmoury
 
@@ -131,7 +150,7 @@ Set-MpPreference -DisableRealtimeMonitoring $true
 ```
 **Example:**
 
-![Main Logo](images/Example_Defender01.PNG 'ExampleDefender')
+![Main Logo](Other/ad_cs_imgs/Example_Defender01.PNG 'ExampleDefender')
 
 # Remote Desktop
 
@@ -368,7 +387,7 @@ Get-DomainTrustMapping
 ```
 **Example:**
 
-![Main Logo](images/Example_trust01.PNG 'Example01')
+![Main Logo](Other/ad_cs_imgs/Example_trust01.PNG 'Example01')
 
 - **With AD Module:**
 ```powershell
@@ -393,7 +412,7 @@ Get-NetForestDomain -Verbose | Get-NetDomainTrust | ?{$_.TrustType -eq 'External
 ```
 **Example:**
 
-![Main Logo](images/Example_trust02.PNG 'Example02')
+![Main Logo](Other/ad_cs_imgs/Example_trust02.PNG 'Example02')
 
 - **With AD Module:**
 ```powershell
@@ -431,7 +450,7 @@ Link: [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 #### BloodHound-python:
 Link: [BloodHound-python](https://github.com/dirkjanm/BloodHound.py)
 
-![Title](images/bloodhound.png 'bloodhound')
+![Title](Other/ad_cs_imgs/bloodhound.png 'bloodhound')
 
 **1. Install and start the neo4j service:**
 ```powershell
@@ -683,7 +702,7 @@ klist
 ```
 **Example:**
 
-![Main Logo](images/Example_SPN01.png 'Example03')
+![Main Logo](Other/ad_cs_imgs/Example_SPN01.png 'Example03')
 
 **4. Export all tickets and Bruteforce the password:**
 ```powershell
@@ -833,7 +852,7 @@ gwmi -class win32_operatingsystem -ComputerName mcorp-dc.corporate.local
 ```
 **Example:**
 
-![Main Logo](images/Example_Child_to_parent01.PNG 'Example04')
+![Main Logo](Other/ad_cs_imgs/Example_Child_to_parent01.PNG 'Example04')
 
 ### Across Forest using Trust Tickets
 
@@ -861,7 +880,7 @@ forged trust ticket:**
 
 ### GenericAll Abused
 
-![Main Logo](images/Example_BloodHound_GenericAll.PNG 'Example_Generic')
+![Main Logo](Other/ad_cs_imgs/Example_BloodHound_GenericAll.PNG 'Example_Generic')
 
 **1. Full control with GenericAll. Method to change the password:**
 ```powershell

