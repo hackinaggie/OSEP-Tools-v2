@@ -18,6 +18,7 @@ namespace sql
             string username = "";
             string password = "";
             string sqlServer = "localhost";
+            string responderIP = "";
             string database = "master";
             string impersonateuser = "";
             bool querymode = false;
@@ -45,6 +46,9 @@ namespace sql
                         break;
                     case "/S":
                         sqlServer = arg.Substring(3);
+                        break;
+                    case "/R":
+                        responderIP = arg.Substring(3);
                         break;
                     case "/Q":
                         querymode = true;
@@ -106,6 +110,7 @@ namespace sql
                 Console.WriteLine(" /p: Password to authenticate with");
                 Console.WriteLine(" /d: Database to connect to (default: Master)");
                 Console.WriteLine(" /s: Server to connect to (default: Localhost)");
+                Console.WriteLine(" /r: Responder IP (default: Localhost)");
                 Console.WriteLine(" /i: User to impersonate. Enter \"dbo\" to try and auth as dbo in the msdb database.");
                 Console.WriteLine(" /t: Tunnel through a Linked MSSQL server in order to complete tasks on one of its Linked servers.");
             }
@@ -1257,8 +1262,16 @@ namespace sql
                             Console.WriteLine("Invalid entry.  Type exit to close application.");
                         }
                     }
-                    Console.Write("Enter responder server IP: ");
-                    share = Console.ReadLine();
+                    if (string.IsNullOrEmpty(responderIP))
+                    {
+                        Console.Write("Enter responder server IP: ");
+                        share = Console.ReadLine();
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Responder IP: " + responderIP);
+                        share = responderIP;
+                    }
                     if (share == "exit")
                     {
                         con.Close();

@@ -52,6 +52,9 @@ Below is a small table of contents, some notes, my changelog, and then the discl
   - Rename `Loaders_PEs` to `Loaders_Disk`, `Loaders_Shellcode` to `Loaders_Memory`, move projects between them.
 - 01/20/2024
   - `DLLInject64` and `DLLRunner32`: Move to `AppLocker_Bypass`, add AMSI Bypasses, and add XSL + HTA Payload examples.
+- 01/04/2025
+  - Merge in johto89:main... BUT Remove OSEP-Code-Snippets/ dir (Don't feel like its in the spirit of the Repo. I only included projects from that Repo I felt are useful)
+  - Re-add paylods/Active_Directory. Remove Other/nc_shellcode.txt. Relocate the AD Cheatsheet.
 
 ## TODOs
 

